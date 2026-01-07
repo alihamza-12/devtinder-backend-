@@ -48,7 +48,7 @@ requestRouter.post("/request/:status/:toUserId", userAuth, async (req, res) => {
     });
     const data = await ConnectionRequest.save();
     res.json({
-      message: `${findUser.firstName} is ${status} in  ${toUserId}`,
+      message: `${findUser.firstName} is ${status} in  ${toUserData.firstName}`,
       data,
     });
   } catch (error) {

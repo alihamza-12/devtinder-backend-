@@ -24,6 +24,9 @@ const connectionRequestSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+//compound Index --> for making the searching(querying) to DB Fast
+// By default when the require is true then it automatically make the index 1
+connectionRequestSchema.index({ fromUserId: 1, toUserId: 1 });
 
 //pre validation if user and sender is same
 connectionRequestSchema.pre("save", function (next) {
