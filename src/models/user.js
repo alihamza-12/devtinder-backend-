@@ -79,7 +79,7 @@ const UserSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-//Schema level methodes--->which is helper function we called 
+//Schema level methodes--->which is helper function we called
 
 //helper simple  function for user password and the hashed password comparizan
 UserSchema.methods.isPassValid = async function (userInputPassword) {
