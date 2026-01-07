@@ -1,4 +1,5 @@
 const validator = require("validator");
+const bcrypt = require("bcrypt");
 
 //validating user input data
 const validatorForSignUp = (req) => {
@@ -67,8 +68,23 @@ const validateEditProfileData = (req) => {
   );
   return isEditAllowed;
 };
-
+//Validating user forgotpassword
+const validateForGotPasswor = async (req) => {
+  const { newPassword, confirmPassword } = req.body;
+  if (!newPassword || !validator.isStrongPassword(newPassword)) {
+    throw new Error("Password cannot be strong enough");
+  } else if (!confirmPassword) {
+    throw new Error("Confirm Password is required");
+  } else if (newPassword !== confirmPassword) {
+    throw new Error("New Password and Confirm password donot match");
+  }
+  const hashedPass = await bcrypt.hash(newPassword, 10);
+  // console.log(hashedPass);
+  // console.log(newPassword);
+  return hashedPass;
+};
 module.exports = {
   validatorForSignUp,
   validateEditProfileData,
+  validateForGotPasswor,
 };

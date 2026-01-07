@@ -1,6 +1,9 @@
 const express = require("express");
 const { userAuth } = require("../middlewares/userAuth");
-const { validateEditProfileData } = require("../utils/validation");
+const {
+  validateEditProfileData,
+  validateForGotPasswor,
+} = require("../utils/validation");
 
 const profileRoute = express.Router();
 
@@ -32,6 +35,22 @@ profileRoute.patch("/profile/edit", userAuth, async (req, res) => {
     res.json({
       message: `${loggedInUser.firstName} , your profile is Updated`,
       data: loggedInUser,
+    });
+  } catch (error) {
+    res.status(400).send("ERROR : " + error.message);
+  }
+});
+//ForGotPassword-->Edit password
+profileRoute.patch("/profile/forGotPassword", userAuth, async (req, res) => {
+  try {
+    const hashedPassword = await validateForGotPasswor(req);
+    //loggedInUser Come from userAuth
+    const loggedInUser = req.findUser;
+    loggedInUser.password = hashedPassword;
+    await loggedInUser.save();
+    res.json({
+      message: `${loggedInUser.firstName} Your Password is Updated`,
+      hashedPassword,
     });
   } catch (error) {
     res.status(400).send("ERROR : " + error.message);
