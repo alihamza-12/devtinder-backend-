@@ -27,9 +27,9 @@ requestRouter.post("/request/:status/:toUserId", userAuth, async (req, res) => {
       throw new Error("Reciver User Not found");
     }
     //if the sender is sending request to himself
-    // if (fromUserId == toUserId) {
-    //   throw new Error("you cannot send request to yourself");
-    // }
+    if (fromUserId == toUserId) {
+      throw new Error("you cannot send request to yourself");
+    }
     //if the user is already sended a request error
     const existConnectionRequest = await ConnectionRequestModel.findOne({
       $or: [
