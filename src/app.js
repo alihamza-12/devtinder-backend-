@@ -26,112 +26,16 @@ app.use(express.json());
 //Middleware for reading the cookies
 app.use(cookieParse());
 
-app.post("/signup", async (req, res) => {
-  const data = req.body;
-  const { firstName, lastName, email, password, gender, skills, age } =
-    req.body;
+//requiring multiples of routes from the files
+const authRouter = require("./routes/auth");
+const profileRouter = require("./routes/profile");
+const requestRouter = require("./routes/request");
 
-  //manually data send
+//use that routes
+app.use("/", authRouter);
+app.use("/", profileRouter);
+app.use("/", requestRouter);
 
-  // const user = new User({
-  //   firstName: "Don",
-  //   lastName: "Jhon",
-  //   email: "hello3@gmail.com",
-  // });
-
-  try {
-    //Validation of User Data
-    validatorForSignUp(req);
-
-    //Password encryption(hash Password)
-    const hashedPass = await bcrypt.hash(password, 10);
-    // console.log("Hashed Password of user:", hashedPass);
-
-    //if the skill length is greater then 10 skills error throw
-    if (data?.skills.length > 10) {
-      throw new Error("Skills cannot be more then 10");
-    }
-    
-    //Create new instance of the user model
-    //Dynamically send data
-    const user = new User({
-      firstName,
-      lastName,
-      email,
-      password: hashedPass,
-      gender,
-      skills,
-      age,
-    });
-
-    //Saving user to database
-    await user.save();
-
-    res.send("User is Added");
-
-    console.log("user is added to the Database");
-  } catch (error) {
-    res.status(400).send("ERROR : " + error.message);
-  }
-});
-//post login for user
-app.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    const findUser = await User.findOne({ email: email });
-
-    if (findUser) {
-      const userPassword = findUser.password;
-      //Compare plain password with the hash Password which are stored in the database
-      // const isPaasswordValid = await bcrypt.compare(password, userPassword);
-
-      //From the user schema there we compare the password in the helper function
-      const isPaasswordValid = await findUser.isPassValid(password);
-      if (isPaasswordValid) {
-        //  const token = await jwt.sign(
-        //   { _id: findUser._id },
-        //   "SecrureKeyIsHere",
-        //   { expiresIn: "1d" }
-        // );
-
-        //user.js(getting that jwt from the scheme.methods file of user)
-        const token = await findUser.getjwt();
-        // console.log(token);
-        //sending jwt token in cookies
-        res.cookie("token", token);
-
-        res.send("User Login successfully");
-      } else {
-        throw new Error("Invalid caridentials");
-      }
-    } else {
-      throw new Error("Invalid caridentials");
-    }
-  } catch (error) {
-    res.status(400).send("ERROR : " + error.message);
-  }
-});
-//post profile
-app.get("/profile", userAuth, async (req, res) => {
-  try {
-    //recived from the middleware(userAuth.js)
-    const findUser = req.findUser;
-    res.send(findUser);
-  } catch (error) {
-    res.status(400).send("ERROR : " + error.message);
-  }
-});
-//Send connection request sended from user to other user
-app.post("/sendConnectionRequest", userAuth, async (req, res) => {
-  try {
-    //recive user from auth current user
-    const findUser = req.findUser;
-    res.send(findUser.firstName + " Sended a connection request ");
-  } catch (error) {
-    res.status(400).send("ERROR : " + error.message);
-  }
-});
 //Making connection to the Database
 connectDB()
   .then(() => {
