@@ -5,10 +5,12 @@ const connectionRequestSchema = new mongoose.Schema(
   {
     fromUserId: {
       type: mongoose.Schema.ObjectId,
+      ref: "User", //reference of the user collection for to get the dat aof the Form user
       required: true,
     },
     toUserId: {
       type: mongoose.Schema.ObjectId,
+      ref: "User", //reference of the user collection for to get the dat aof the Form user
       required: true,
     },
     status: {

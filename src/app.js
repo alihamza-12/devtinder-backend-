@@ -30,11 +30,13 @@ app.use(cookieParse());
 const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/request");
+const userRoute = require("./routes/user");
 
 //use that routes
 app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
+app.use("/", userRoute);
 
 //Making connection to the Database
 connectDB()
