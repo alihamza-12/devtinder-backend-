@@ -5,7 +5,7 @@ const user = require("../models/user");
 
 const requestRouter = express.Router();
 
-//Send connection request sended from user to other user
+//Send connection request sended from user(LoggedInUser) to other user
 requestRouter.post("/request/:status/:toUserId", userAuth, async (req, res) => {
   try {
     const toUserId = req.params.toUserId;
@@ -55,4 +55,45 @@ requestRouter.post("/request/:status/:toUserId", userAuth, async (req, res) => {
     res.status(400).send("ERROR : " + error.message);
   }
 });
+
+//reviewing the requests and accept the request which status is interested
+requestRouter.post(
+  "/request/review/:status/:requestId",
+  userAuth,
+  async (req, res) => {
+    try {
+      //2-get the status and the requestId from the url
+      const { status, requestId } = req.params;
+      //1-LoggedInUser recived from the userAuth
+      const loggedInUser = req.findUser;
+      //3-check the status of the request only accepted and ingnored
+      const allowedStatus = ["accepted", "rejected"];
+      const isStatusAllowed = allowedStatus.includes(status);
+      if (!isStatusAllowed) {
+        throw new Error("Status for that request is Invalid");
+      }
+      //4-Getting the request of that user form DB
+      const connectionRequest = await ConnectionRequestModel.findOne({
+        _id: requestId,
+        toUserId: loggedInUser._id,
+        status: "interested",
+      });
+      //5-If the request not found then throw error
+      if (!connectionRequest) {
+        throw new Error("Connection Request not Found");
+      }
+      //6-else update the status to accepted or rejected
+      connectionRequest.status = status;
+      //7-Save to DB
+      const data = await connectionRequest.save();
+      //8-send back the res with that data
+      res.json({
+        message: `Connection Request is ${status}`,
+        data,
+      });
+    } catch (error) {
+      res.status(400).send("ERROR : " + error.message);
+    }
+  }
+);
 module.exports = requestRouter;
