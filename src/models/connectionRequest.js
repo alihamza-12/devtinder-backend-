@@ -29,12 +29,11 @@ const connectionRequestSchema = new mongoose.Schema(
 connectionRequestSchema.index({ fromUserId: 1, toUserId: 1 });
 
 //pre validation if user and sender is same
-connectionRequestSchema.pre("save", function (next) {
+connectionRequestSchema.pre("save", async function () {
   const connectionRequest = this;
   if (connectionRequest.fromUserId.equals(connectionRequest.toUserId)) {
     throw new Error("you cannot send request to yourself");
   }
-  next();
 });
 
 const ConnectionRequestModel = new mongoose.model(
