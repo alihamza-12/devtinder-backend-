@@ -1,6 +1,7 @@
 const express = require("express");
 const { userAuth } = require("../middlewares/userAuth");
 const ConnectionRequestModel = require("../models/connectionRequest");
+const User = require("../models/user");
 const userRoute = express.Router();
 
 const SAFED_USER_DATA = "firstName lastName photoUrl gender age skills";
@@ -58,6 +59,44 @@ userRoute.get("/user/connections", userAuth, async (req, res) => {
     res.json({
       message: `Data fetched successfully`,
       data: finalDataOfFriends,
+    });
+  } catch (error) {
+    res.status(400).send("ERROR : " + error.message);
+  }
+});
+//Feed api
+userRoute.get("/feed", userAuth, async (req, res) => {
+  //conditions
+  //-user cannot see his own card
+  //-his connection card
+  //-his ignored peoples
+  //-his sent request peoples
+  try {
+    //1-logged In User
+    const loggedInUser = req.findUser;
+    //2-Find all the connections of the loggedInuser(his card,his friends,he sended requested )
+    const connectionRequests = await ConnectionRequestModel.find({
+      $or: [{ fromUserId: loggedInUser._id }, { toUserId: loggedInUser._id }],
+    }).select("fromUserId toUserId");
+    //3-Hide that users which is friend,already sended request and user loggedIN himself
+    const hideUsersFromFeed = new Set();
+    //4-loop on the users to put in array with only unique values
+    connectionRequests.forEach((req) => {
+      hideUsersFromFeed.add(req.fromUserId.toString());
+      hideUsersFromFeed.add(req.toUserId.toString());
+    });
+    // res.send([...hideUsersFromFeed]);
+    //5-find the users which are not in the hideUsersFeed --> that is the users for feed
+    const usersForFeed = await User.find({
+      $and: [
+        { _id: { $nin: [...hideUsersFromFeed] } },
+        { _id: { $ne: loggedInUser._id } },
+      ],
+    });
+    res.json({
+      message: `Data fetched successfully`,
+      count: usersForFeed.length,
+      data: usersForFeed,
     });
   } catch (error) {
     res.status(400).send("ERROR : " + error.message);
