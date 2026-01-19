@@ -92,7 +92,7 @@ userRoute.get("/feed", userAuth, async (req, res) => {
         { _id: { $nin: [...hideUsersFromFeed] } },
         { _id: { $ne: loggedInUser._id } },
       ],
-    });
+    }).select("-password -updatedAt -createdAt");
     res.json({
       message: `Data fetched successfully`,
       count: usersForFeed.length,
