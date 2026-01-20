@@ -24,7 +24,13 @@ const cors = require("cors");
 const app = express();
 
 // for cors error
-app.use(cors());
+app.use(
+  cors({
+    //your react api doman Url
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 //Middleware for data read in json
 app.use(express.json());
 //Middleware for reading the cookies
