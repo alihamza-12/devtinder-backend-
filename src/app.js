@@ -17,10 +17,14 @@ const cookieParse = require("cookie-parser");
 //JSON web Token for authentication of user
 const jwt = require("jsonwebtoken");
 const { userAuth } = require("./middlewares/userAuth");
+//for cors error while hiting api use that package
+const cors = require("cors");
 
 //For api routes-->express
 const app = express();
 
+// for cors error
+app.use(cors());
 //Middleware for data read in json
 app.use(express.json());
 //Middleware for reading the cookies
