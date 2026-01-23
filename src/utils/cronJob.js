@@ -30,11 +30,11 @@ cron.schedule("0 8 * * *", async () => {
         (req) => req.toUserId.email === email
       );
       //console the values
-      const touserName = userData[0].toUserId.firstName;
-    //   console.log(touserName);
+      const toUserName = userData[0].toUserId.firstName;
+    //   console.log(toUserName);
       //send the emial to the toUser
       const text = "Visit to devTinder You got New Friend requests";
-      await sendEmail(toUserName, email, text);
+      await sendEmail(toUserName, email, text); 
     }
   } catch (error) {
     console.log(
