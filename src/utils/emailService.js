@@ -13,7 +13,7 @@ const transport = nodemailer.createTransport({
 });
 
 //Send an email when user is signup
-const sendEmailSignin = async (name, email,text) => {
+const sendEmail = async (name, email,text) => {
   try {
     const info = await transport.sendMail({
       from: '"DevTinder" <loonaali358@gmail.com>',
@@ -27,4 +27,4 @@ const sendEmailSignin = async (name, email,text) => {
   }
 };
 
-module.exports = { sendEmailSignin };
+module.exports = { sendEmail };

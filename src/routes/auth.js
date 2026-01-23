@@ -2,7 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const { validatorForSignUp } = require("../utils/validation");
-const { sendEmailSignin } = require("../utils/emailService");
+const { sendEmail } = require("../utils/emailService");
 
 const authRouter = express.Router();
 
@@ -49,7 +49,7 @@ authRouter.post("/signup", async (req, res) => {
     await user.save();
     //Sending email:
     const text = "You are successfully signup to the DevTinder Platform";
-    await sendEmailSignin(firstName, email, text);
+    await sendEmail(firstName, email, text);
 
     res.send("User is Added");
 

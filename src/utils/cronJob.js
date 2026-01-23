@@ -2,7 +2,7 @@ const cron = require("node-cron");
 //for dates use the date-fns package
 const { subDays, startOfDay, endOfDay } = require("date-fns");
 const ConnectionRequestModel = require("../models/connectionRequest");
-const { sendEmailSignin } = require("../utils/emailService");
+const { sendEmail } = require("../utils/emailService");
 
 cron.schedule("0 8 * * *", async () => {
   try {
@@ -34,7 +34,7 @@ cron.schedule("0 8 * * *", async () => {
     //   console.log(touserName);
       //send the emial to the toUser
       const text = "Visit to devTinder You got New Friend requests";
-      await sendEmailSignin(toUserName, email, text);
+      await sendEmail(toUserName, email, text);
     }
   } catch (error) {
     console.log(
