@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const { validatorForSignUp } = require("../utils/validation");
+const { sendEmailSignin } = require("../services/emailService");
 
 const authRouter = express.Router();
 
@@ -46,6 +47,8 @@ authRouter.post("/signup", async (req, res) => {
 
     //Saving user to database
     await user.save();
+    //Sending email:
+    await sendEmailSignin(firstName, email);
 
     res.send("User is Added");
 
