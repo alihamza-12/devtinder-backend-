@@ -48,7 +48,8 @@ authRouter.post("/signup", async (req, res) => {
     //Saving user to database
     await user.save();
     //Sending email:
-    await sendEmailSignin(firstName, email);
+    const text = "You are successfully signup to the DevTinder Platform";
+    await sendEmailSignin(firstName, email, text);
 
     res.send("User is Added");
 

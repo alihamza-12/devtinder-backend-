@@ -12,14 +12,14 @@ const transport = nodemailer.createTransport({
   },
 });
 
-//Send an email
-const sendEmailSignin = async (name, email) => {
+//Send an email when user is signup
+const sendEmailSignin = async (name, email,text) => {
   try {
     const info = await transport.sendMail({
       from: '"DevTinder" <loonaali358@gmail.com>',
       to: email,
-      subject: "Sign In Aleart ✔",
-      text: `Dear ${name} You are successfully signin to the DevTinder Platform`,
+      subject: "DevTinder Aleart ✔",
+      text: `${name}, ${text}`,
     });
     console.log(info);
   } catch (error) {

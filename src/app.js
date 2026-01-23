@@ -24,6 +24,8 @@ require("dotenv").config();
 
 //For api routes-->express
 const app = express();
+//For cronJob sending emails every 8am morning
+require("./utils/cronJob");
 
 // for cors error
 app.use(
