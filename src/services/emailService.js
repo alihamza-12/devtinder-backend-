@@ -3,12 +3,12 @@ const nodemailer = require("nodemailer");
 
 //sending mail to the signed in user that you are successfullly logged in to our platform
 const transport = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
+  host: process.env.MAIL_HOST,
+  port: process.env.MAIL_PORT,
   secure: false, // Use true for port 465, false for port 587
   auth: {
-    user: "loonaali358@gmail.com",
-    pass: "cqcaxbfklcpjyzdp",
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS,
   },
 });
 

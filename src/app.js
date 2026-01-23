@@ -19,6 +19,8 @@ const jwt = require("jsonwebtoken");
 const { userAuth } = require("./middlewares/userAuth");
 //for cors error while hiting api use that package
 const cors = require("cors");
+//for loading the ENV file
+require("dotenv").config();
 
 //For api routes-->express
 const app = express();
